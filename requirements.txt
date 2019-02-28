@@ -1,4 +1,4 @@
-import discord
+import discord.py == 0.16.12
 import threading
 import random
 import openpyxl
