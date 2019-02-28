@@ -1,10 +1,8 @@
-import discord.py == 0.16.12
-import threading
-import random
-import openpyxl
-import datetime
-import Image
-import Unsae
-import bs4
-import requests
-import asyncio
+discord.py == 0.16.12
+threading
+random
+openpyxl
+datetime
+bs4
+requests
+asyncio
