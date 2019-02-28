@@ -12,6 +12,7 @@ import datetime
 from discord.ext import commands
 import Image
 import UnSae
+import os
 
 
 client = discord.Client()
@@ -333,5 +334,5 @@ async def on_message(message):
 
 
 
-
-client.run('NTMyNjEzMzU5ODY3MDAyODgw.Dxh69g._AJOXBIwcD9AotBKwjDi-bEAFeE')
+access_token = os.environ["BOT_TOKEN"]
+client.run('access.token')
