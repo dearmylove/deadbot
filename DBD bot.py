@@ -1,4 +1,3 @@
-import threading
 import discord
 import asyncio
 import random
@@ -9,13 +8,6 @@ import UnSae
 import os
 
 client = discord.Client()
-
-
-def Running(): # 10분 간격으로 'Bot_is_Running' 이라는 문자열을 출력하며 봇의 상태를 알려줌.
-    print('Bot_is_Running')
-    threading.Timer(600, Running).start()
-
-Running()
 
 
 @client.event
