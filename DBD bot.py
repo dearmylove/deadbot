@@ -6,7 +6,7 @@ import openpyxl
 import datetime
 import Image
 import UnSae
-
+import os
 
 client = discord.Client()
 
@@ -22,10 +22,11 @@ Running()
 async def on_member_join(member): # 방에 막 들어온 Member에게 "새로 오신 분!" 이라는 Role을 부여함
     role = ""
     for i in member.server.roles:
-        if i.name == "새로 오신 분!":
+        if i.name == "해양 심층수":
             role = i
             break
     await client.add_roles(member, role)
+
 
 
 @client.event
@@ -130,16 +131,16 @@ async def on_message(message):
         for i in content:
             name = name + i + " "
         print(name)
-        dalcom = discord.utils.get(client.get_all_members(), id='257098084352393217')
-        print(dalcom)
-        # 413714272120602624)
+        me = discord.utils.get(client.get_all_members(), id='257098084352393217')
+        dalcom = discord.utils.get(client.get_all_members(), id='413714272120602624')
         await client.send_message(dalcom, message.author.name + "(" + message.author.display_name + ")" + " : " + name)
+        await client.send_message(me, message.author.name + "(" + message.author.display_name + ")" + " : " + name)
 
     if message.content.startswith("!출첵"):
         file = openpyxl.load_workbook("쿨타임(쳌).xlsx")
         sheet = file.active
 
-        for i in range(1, 298):
+        for i in range(1, 1298):
             if str(sheet["A" + str(i)].value) == str(message.author.id):
                 if int(sheet["B" + str(i)].value) <= int(datetime.datetime.now().strftime("%Y%m%d%H%M%S")):
                     await client.send_message(message.channel, "출석체크 완료!")
@@ -179,6 +180,39 @@ async def on_message(message):
                 file.save("쿨타임(쳌).xlsx")
                 await client.send_message(message.channel, "출석체크 완료!")
                 break
+                
+    if message.content.startswith("!등업"):
+        file = openpyxl.load_workbook("쿨타임(쳌).xlsx")
+        many = message.content.split(" ")
+        name = many[1:]  # 사람 이름
+        length = len(message.author.roles)
+        role = message.author.roles[length - 1].name
+        owner = discord.utils.get(client.get_all_members(), id='413714272120602624')
+        blue = ":blue_heart: 청정수"
+        yellow = ":yellow_heart: 데린이"
+        green = ":green_heart: 고인물"
+        normal = "해양 심층수"
+        for i in message.server.roles:
+            if i.name == blue:
+                blue = i
+            if i.name == yellow:
+                yellow = i
+            if i.name == green:
+                green = i
+            if i.name == normal:
+                normal = i
+        sheet = file.active
+        for i in range(1, 1298):
+
+            if sheet["C" + str(i)].value >= 1 or sheet["C" + str(i)].value <= 2:
+                for member in message.server.members:
+                    if sheet["A" + str(i)].value == member.id:
+                        member = discord.utils.get(client.get_all_members(), id=sheet["A" + str(i)].value)
+                        await client.add_roles(member, blue)
+                        await client.remove_roles(member, normal)
+
+
+
 
     if message.content.startswith("!출확"):
         file = openpyxl.load_workbook("쿨타임(쳌).xlsx")
@@ -188,21 +222,11 @@ async def on_message(message):
         role = message.author.roles[length - 1].name
         sheet = file.active
 
-        for i in range(1, 298):
+        for i in range(1, 1298):
             if str(sheet["A" + str(i)].value) == message.author.id:
                 times = str(sheet["C" + str(i)].value)
                 var_time = int(times)
                 length = len(message.author.roles)
-
-                if sheet["C" + str(i)].value == 1:
-                    member = message.author.id
-                    name = ":blue_heart: 청정수"
-                    await client.send_message(message.channel, "!등급 " + member + " " + name)
-
-
-
-
-
 
 
                 embed = discord.Embed(
@@ -264,68 +288,7 @@ async def on_message(message):
         await client.add_roles(member, role)
 
 
-"""
-    if message.content.startswith("!등급"): # 다른 사람들도 명령어를 사용 가능한 심각한 버그에 걸림
-        role = ""
-        rolename = message.content.split(" ")
-        member = discord.utils.get(client.get_all_members(), id = str(rolename[1]))
-        roletrue = rolename[2:]
-        name = ""
-        for i in roletrue:
-            name = name + i + " "
-        name = name[:-1]
-        for i in message.server.roles:
-            if i.name == name:
-                role = i
-                break
-
-        await client.add_roles(member, role)
-
-    if message.content.startswith("!등삭"): # 다른 사람들도 명령어를 사용 가능한 심각한 버그에 걸림
-        role = ""
-        rolename = message.content.split(" ")
-        member = discord.utils.get(client.get_all_members(), id=str(rolename[1]))
-
-        roletrue = rolename[2:]
-        name = ""
-        for i in roletrue:
-            name = name + i + " "
-        # name = name[:-1]
-
-        for i in message.server.roles:
-            if i.name == name:
-                role = i
-                break
-
-        await client.remove_roles(member, role)
-        """
-
-"""
-    if message.content.startswith("!출석보정"):
-        mes = message.content.split(" ")
-        id = mes[1]
-        count = int(mes[2])
-        file = openpyxl.load_workbook("쿨타임(쳌).xlsx")
-        sheet = file.active
-        for i in range(1, 101):
-            if str(sheet["A" + str(i)].value) == str(id):
-
-                sheet["C" + str(i)].value += count
-                file.save("쿨타임(쳌).xlsx")
-                break
-            if str(sheet["A" + str(i)].value) == '-':
-                sheet["A" + str(i)].value = str(id)
-                sheet["C" + str(i)].value += count
-
-                file.save("쿨타임(쳌).xlsx")
-
-                await client.send_message(message.channel, "출석체크 완료!")
-                break
-                """
 
 
-
-
-
-
-client.run('NTMyNjEzMzU5ODY3MDAyODgw.Dxh69g._AJOXBIwcD9AotBKwjDi-bEAFeE')
+access_token = os.environ["BOT_TOKEN"]
+client.run(access_token)
